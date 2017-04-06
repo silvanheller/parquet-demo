@@ -1,15 +1,25 @@
+#Workshop-files
+workshop/
+
+#Java & Scala
 *.class
 *.log
 
 #IntelliJ
 .idea
+project/project/
+target/
+project/target
+
+#Spark
+spark-warehouse/
+
 
 # sbt specific
 .cache
 .history
 .lib/
 dist/*
-target/
 lib_managed/
 src_managed/
 project/boot/
