@@ -13,7 +13,7 @@ project/target
 
 #Spark
 spark-warehouse/
-
+metastore_db/
 
 # sbt specific
 .cache
