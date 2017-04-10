@@ -16,7 +16,7 @@ import scala.util.{Failure, Success, Try}
   */
 object Generator extends Logging with Config {
 
-  val MAX_TUPLES_PER_BATCH = 5000
+  val MAX_TUPLES_PER_BATCH = 1000
 
   /**
     * Writes rows*[[DataFrame]] to the specified filepath, each with the specified amount of columns
@@ -41,6 +41,7 @@ object Generator extends Logging with Config {
         val df = ac.sparkSession.createDataFrame(rdd, schema)
 
         val status = writeDF(filepath, df, storageMode)
+        df.unpersist()  //Remove cache
         if (status.isFailure) {
           log.error("batch contained error, aborting random data insertion")
           throw status.failed.get
