@@ -7,7 +7,11 @@ library(plyr)
 #Be careful with the command below, it only works in rstudio
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 getwd()
-fn <- "0410_1649"
+###############################################
+## Enter your Filename here
+###############################################
+fn <- "0410_1728"
+###############################################
 path <- paste("plots/", fn, sep = '')
 dir.create(path, recursive = TRUE,  mode = "0777", showWarnings = FALSE)
 df <- read.table(paste("../results/results_", fn, ".tsv", sep = ''),
