@@ -1,7 +1,7 @@
 package ch.unibas.dmi.hs17.dis.ops
 
 import ch.unibas.dmi.hs17.dis.datagen.Generator
-import ch.unibas.dmi.hs17.dis.main.SparkTest._
+import ch.unibas.dmi.hs17.dis.main.EvaluationRunner._
 import ch.unibas.dmi.hs17.dis.storage.StorageMode
 import ch.unibas.dmi.hs17.dis.utils.{EvaluationResultLogger, Logging}
 

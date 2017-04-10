@@ -14,7 +14,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 /**
   * Created by silvan on 05.04.17.
   */
-object SparkTest extends Config with Logging {
+object EvaluationRunner extends Config with Logging {
 
   def cleanup() = {
     log.debug("Deleting old files")
