@@ -110,5 +110,9 @@ run in Compile <<= Defaults.runTask(fullClasspath in Compile, mainClass in(Compi
 ideaExcludeFolders += ".idea"
 ideaExcludeFolders += "workshop"
 ideaExcludeFolders += "results"
+ideaExcludeFolders += "plots/plots"
+ideaExcludeFolders += "metastore_db"
+
+
 
 
