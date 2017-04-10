@@ -10,7 +10,7 @@ getwd()
 ###############################################
 ## Enter your Filename here
 ###############################################
-fn <- "0410_1728"
+fn <- "0410_1850"
 ###############################################
 path <- paste("plots/", fn, sep = '')
 dir.create(path, recursive = TRUE,  mode = "0777", showWarnings = FALSE)
@@ -45,7 +45,7 @@ storagePlot <- function(rowCount = 10000, colCount = 100, slen  = 100, op = "Wri
     aes(fill = storageMode)
   )+
     labs(
-      title = paste("Write time for",rowCount,"rows,",colCount,"cols","and ",slen,"Content Length\n"),
+      title = paste(op,"time for",rowCount,"rows,",colCount,"cols","and ",slen,"Content Length\n"),
       x = "Storage Mode",
       y = qt,
       fill = "Storage Mode"

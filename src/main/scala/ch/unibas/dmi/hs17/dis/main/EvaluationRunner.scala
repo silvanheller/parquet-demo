@@ -3,7 +3,7 @@ package ch.unibas.dmi.hs17.dis.main
 import java.io.File
 
 import ch.unibas.dmi.hs17.dis.config.Config
-import ch.unibas.dmi.hs17.dis.ops.{QueryOp, WriteOp}
+import ch.unibas.dmi.hs17.dis.ops.QueryOp
 import ch.unibas.dmi.hs17.dis.storage.StorageMode.StorageMode
 import ch.unibas.dmi.hs17.dis.utils.Logging
 import org.apache.commons.io.FileUtils
@@ -34,8 +34,8 @@ object EvaluationRunner extends Config with Logging {
 
     cleanup()
 
-    val writeOp = new WriteOp(rows, cols, stringlens)
-    writeOp.execute()
+    //val writeOp = new WriteOp(rows, cols, stringlens)
+    //writeOp.execute()
 
     val queryOp = new QueryOp(rows, cols, stringlens)
     queryOp.execute()

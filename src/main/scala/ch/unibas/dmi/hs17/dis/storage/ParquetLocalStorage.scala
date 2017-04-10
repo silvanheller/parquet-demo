@@ -1,11 +1,7 @@
 package ch.unibas.dmi.hs17.dis.storage
 
-import java.io.File
-
-import ch.unibas.dmi.hs17.dis.config.Config
 import ch.unibas.dmi.hs17.dis.main.AppContext
 import ch.unibas.dmi.hs17.dis.utils.Logging
-import org.apache.commons.io.FileUtils
 import org.apache.spark.sql.{DataFrame, SaveMode}
 
 import scala.util.{Failure, Success, Try}
@@ -15,7 +11,7 @@ import scala.util.{Failure, Success, Try}
   *
   * Created by silvan on 05.04.17.
   */
-object ParquetLocalStorage extends Logging with Serializable with Config {
+object ParquetLocalStorage extends FileStorage with Logging{
 
   def read(filename: String)(implicit ac: AppContext): Try[DataFrame] = {
     try {
@@ -29,15 +25,6 @@ object ParquetLocalStorage extends Logging with Serializable with Config {
     }
   }
 
-  def exists(filename: String)(implicit ac: AppContext): Try[Boolean] = {
-    try {
-      val file = new File(filename)
-      Success(file.exists())
-    } catch {
-      case e: Exception => Failure(e)
-    }
-  }
-
   /**
     * Write a dataframe to the specified file
     *
@@ -45,22 +32,8 @@ object ParquetLocalStorage extends Logging with Serializable with Config {
     */
   def write(filename: String, df: DataFrame, mode: SaveMode = SaveMode.Append): Try[Unit] = {
     try {
+      log.debug("Writing parquet file")
       df.write.mode(mode).parquet(filename)
-      Success()
-    } catch {
-      case e: Exception => Failure(e)
-    }
-  }
-
-  def drop(filename: String)(implicit ac: AppContext): Try[Unit] = {
-    try {
-      val file = new File(filename)
-      if (file.isFile) {
-        val delete = file.delete()
-        if (delete) return Success()
-        return Failure(new Exception("Unknown failure while deleting file " + filename))
-      }
-      FileUtils.deleteDirectory(new File(filename))
       Success()
     } catch {
       case e: Exception => Failure(e)
