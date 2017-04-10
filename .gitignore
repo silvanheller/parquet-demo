@@ -1,5 +1,7 @@
 #Workshop-files
 workshop/
+results/
+plots/plots
 
 #Java & Scala
 *.class

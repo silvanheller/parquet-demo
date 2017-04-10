@@ -1,4 +1,4 @@
-package ch.unibas.dmi.hs17.dis.parquet
+package ch.unibas.dmi.hs17.dis.storage
 
 import java.io.File
 
@@ -29,15 +29,24 @@ object ParquetLocalStorage extends Logging with Serializable with Config {
     }
   }
 
+  def exists(filename: String)(implicit ac: AppContext): Try[Boolean] = {
+    try {
+      val file = new File(filename)
+      Success(file.exists())
+    } catch {
+      case e: Exception => Failure(e)
+    }
+  }
+
   /**
     * Write a dataframe to the specified file
     *
     * @param mode Default is [[SaveMode.Append]]
     */
-  def write(filename: String, df: DataFrame, mode: SaveMode = SaveMode.Append): Try[Void] = {
+  def write(filename: String, df: DataFrame, mode: SaveMode = SaveMode.Append): Try[Unit] = {
     try {
       df.write.mode(mode).parquet(filename)
-      Success(null)
+      Success()
     } catch {
       case e: Exception => Failure(e)
     }
@@ -53,16 +62,6 @@ object ParquetLocalStorage extends Logging with Serializable with Config {
       }
       FileUtils.deleteDirectory(new File(filename))
       Success()
-    } catch {
-      case e: Exception => Failure(e)
-    }
-  }
-
-
-  def exists(filename: String)(implicit ac: AppContext): Try[Boolean] = {
-    try {
-      val file = new File(filename)
-      Success(file.exists())
     } catch {
       case e: Exception => Failure(e)
     }

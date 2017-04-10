@@ -2,7 +2,8 @@ package ch.unibas.dmi.hs17.dis.datagen
 
 import ch.unibas.dmi.hs17.dis.config.Config
 import ch.unibas.dmi.hs17.dis.main.AppContext
-import ch.unibas.dmi.hs17.dis.parquet.ParquetLocalStorage
+import ch.unibas.dmi.hs17.dis.storage.StorageMode.{StorageMode, _}
+import ch.unibas.dmi.hs17.dis.storage._
 import ch.unibas.dmi.hs17.dis.utils.Logging
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
@@ -15,39 +16,36 @@ import scala.util.{Failure, Success, Try}
   */
 object Generator extends Logging with Config {
 
-  val MAX_TUPLES_PER_BATCH = 100
+  val MAX_TUPLES_PER_BATCH = 5000
 
   /**
     * Writes rows*[[DataFrame]] to the specified filepath, each with the specified amount of columns
     */
-  def writeDF(rows: Int, cols: Int, stringLength: Int, filepath: String)(implicit ac: AppContext): Try[Unit] = {
+  def genAndWriteDF(rows: Int, cols: Int, stringLength: Int, filepath: String, storageMode: StorageMode)(implicit ac: AppContext): Try[Unit] = {
     try {
       //data
       val limit = math.min(rows, MAX_TUPLES_PER_BATCH)
       (0 until rows).sliding(limit, limit).foreach { seq =>
-        log.debug("starting generating data")
-        val rdd: RDD[Row] = ac.sc.parallelize(
-          seq.map(idx => {
-            val data = Seq.fill(cols)(generateRandomString(stringLength))
-            Row(data: _*)
-          })
-        )
-        log.debug("Generated rdd")
+        //val broadcastSeq = ac.sc.broadcast(seq)
+        //val broadcastCols = ac.sc.broadcast(cols)
+        //val broadcastStringLength = ac.sc.broadcast(stringLength)
+        val data: IndexedSeq[Row] = seq.map(idx => {
+          val data = Seq.fill(cols)(generateRandomString(stringLength))
+          Row(data: _*)
+        })
+
+        val rdd: RDD[Row] = ac.sc.parallelize(data)
+
         //In the end, everything is a string
         val schema = StructType(Seq.tabulate(cols)(el => StructField(el.toString, StringType)))
-        val data = ac.sparkSession.createDataFrame(rdd, schema)
-        data.show()
+        val df = ac.sparkSession.createDataFrame(rdd, schema)
 
-        log.debug("inserting generated data")
-        val status = ParquetLocalStorage.write(filepath, data, SaveMode.Append)
-
+        val status = writeDF(filepath, df, storageMode)
         if (status.isFailure) {
           log.error("batch contained error, aborting random data insertion")
           throw status.failed.get
         }
       }
-      log.debug("Done")
-
       Success()
     } catch {
       case t: Throwable => {
@@ -64,6 +62,15 @@ object Generator extends Logging with Config {
       sb.append(r.nextPrintableChar)
     }
     sb.toString()
+  }
+
+  def writeDF(filepath: String, df: DataFrame, storageMode: StorageMode): Try[Unit] = {
+    storageMode match {
+      case JSON => JsonLocalStorage.write(filepath, df, SaveMode.Append)
+      case Parquet => ParquetLocalStorage.write(filepath, df, SaveMode.Append)
+      case ORC => OrcLocalStorage.write(filepath, df, SaveMode.Append)
+      case CSV => CSVLocalStorage.write(filepath, df, SaveMode.Append)
+    }
   }
 
 }

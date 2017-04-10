@@ -107,35 +107,8 @@ assemblyMergeStrategy in assembly := {
 //provided libraries should be included in "run"
 run in Compile <<= Defaults.runTask(fullClasspath in Compile, mainClass in(Compile, run), runner in(Compile, run))
 
-lazy val setupDocker = taskKey[Unit]("Setup docker containers for ADAMpro to run.")
-setupDocker := {
-  "./scripts/docker-setup.sh" !
-}
+ideaExcludeFolders += ".idea"
+ideaExcludeFolders += "workshop"
+ideaExcludeFolders += "results"
 
-lazy val destroyDocker = taskKey[Unit]("Destroys docker containers for ADAMpro (careful: this command deletes the containers!).")
-destroyDocker := {
-  "./scripts/docker-destroy.sh" !
-}
 
-lazy val startDocker = taskKey[Unit]("Starts the docker containers for ADAMpro.")
-startDocker := {
-  "./scripts/docker-start.sh" !
-}
-
-lazy val stopDocker = taskKey[Unit]("Stops the docker containers for ADAMpro.")
-stopDocker := {
-  "./scripts/docker-stop.sh" !
-}
-
-lazy val runDocker = taskKey[Unit]("Runs ADAMpro in docker container.")
-runDocker := {
-  //TODO: check that docker is running before running assembly and submitting
-  assembly.value
-  "./scripts/docker-run.sh" !
-}
-
-lazy val buildDocker = taskKey[Unit]("Builds the image of a self-contained docker container.")
-buildDocker := {
-  assembly.value
-  "./scripts/docker-build.sh" !
-}

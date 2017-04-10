@@ -11,6 +11,8 @@ import scala.annotation.implicitNotFound
 @implicitNotFound("Cannot find an implicit Context, either import SparkStartup.Implicits._ or use a custom one")
 trait AppContext {
   def sparkSession: SparkSession
-  def sc : SparkContext
-  def sqlContext : SQLContext
+
+  def sc: SparkContext
+
+  def sqlContext: SQLContext
 }
