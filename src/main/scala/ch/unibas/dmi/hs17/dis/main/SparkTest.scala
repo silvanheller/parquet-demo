@@ -15,15 +15,20 @@ object SparkTest extends Config {
   def main(args: Array[String]) {
     val mainContext = createContext()
 
-    implicit def ac: AppContext = mainContext
+    //implicit def ac: AppContext = mainContext
+    implicit val ac = mainContext
 
-    Generator.generateDF(20, 10, 10, LOCAL_DATAPATH+"toy.parquet")
-
+    Generator.writeDF(20, 10, 10, LOCAL_DATAPATH+"toy.parquet")
   }
 
+  /**
+    * Switch for local execution / remote execution
+    * @return Context for the execution
+    */
   def createContext(): AppContext = {
     //Config
     val sparkConfig = new SparkConf()
+    sparkConfig.setAppName("Parquet workshop demo")
     if (EXECUTE_LOCAL) {
       sparkConfig.setMaster("local[2]")
     } else {
@@ -35,7 +40,6 @@ object SparkTest extends Config {
 
       @transient implicit lazy val sparkSession = SparkSession
         .builder()
-        .appName("DIS Workshop Demo - Parquet")
         .config(sparkConfig)
         .enableHiveSupport()
         .getOrCreate()

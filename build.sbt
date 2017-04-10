@@ -72,8 +72,8 @@ val secondaryLibs = Seq(
 
 //log libs
 val logLibs = Seq(
-  "org.slf4j" % "slf4j-api" % "1.7.10",
-  "org.slf4j" % "slf4j-log4j12" % "1.7.10"
+  "org.slf4j" % "slf4j-api" % "1.7.25",
+  "org.slf4j" % "slf4j-log4j12" % "1.7.25"
 )
 
 libraryDependencies := baseLibs ++ coreLibs ++ secondaryLibs ++ logLibs
