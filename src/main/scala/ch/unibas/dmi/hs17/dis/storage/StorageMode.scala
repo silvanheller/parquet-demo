@@ -5,5 +5,5 @@ package ch.unibas.dmi.hs17.dis.storage
   */
 object StorageMode extends Enumeration {
   type StorageMode = Value
-  val Parquet, JSON, CSV, ORC = Value
+  val parquet, json, csv, orc = Value
 }
