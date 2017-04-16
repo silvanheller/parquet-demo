@@ -1,20 +1,20 @@
 # parquet-demo
 Parquet demo project for the Workshop in the Course DIS
 
-##What's this?
+## What's this?
 This is intended to benchmark read and write performances of different file formats.
 The goal is to show both cases where Parquet is superior and inferior.
 
-##Runtime Dependencies
+## Runtime Dependencies
 * JVM
 
-##Development Dependencies
+## Development Dependencies
 * Install R
 * Install RStudio
 * Install ggplot2 with _install.packages("ggplot2")_
 * Install RStudioAPI with _install.packages("rstudioapi")_
 
-##Configuration
+## Configuration
 Set your desired benchmark values @ main/EvaluationRunner
 
 Set your Spark Environment @ main/EvaluationRunner
