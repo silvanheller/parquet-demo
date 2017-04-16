@@ -8,7 +8,7 @@ import ch.unibas.dmi.hs17.dis.utils.{EvaluationResultLogger, Logging}
 /**
   * Created by silvan on 10.04.17.
   */
-class QueryOp(rows: Seq[Int], cols: Seq[Int], stringlens: Seq[Int]) extends Logging with Config{
+class QueryOp(rows: Seq[Int], cols: Seq[Int], stringlens: Seq[Int]) extends Logging with Config {
 
 
   def execute()(implicit ac: AppContext): Unit = {
@@ -25,9 +25,9 @@ class QueryOp(rows: Seq[Int], cols: Seq[Int], stringlens: Seq[Int]) extends Logg
           stringlens.foreach(_stringlen => {
             //log.debug("Evaluating for string-leng {}", _stringlen)
             val start = System.currentTimeMillis()
-            val df = ac.sqlContext.read.format(storageMode.toString)
-              .load(LOCAL_DATAPATH+EvaluationRunner.getFileName(_row, _col, _stringlen, storageMode))
-            val selected = df.select("id", (_col-1).toString).persist()
+            val df = StorageMode.fromString(storageMode.toString).read(LOCAL_DATAPATH + EvaluationRunner.getFileName(_row, _col, _stringlen, storageMode)).get
+            //val df = ac.sqlContext.read.format(storageMode.toString).load(LOCAL_DATAPATH + EvaluationRunner.getFileName(_row, _col, _stringlen, storageMode))
+            val selected = df.select("id", (_col - 1).toString+"c").persist()
             val stop = System.currentTimeMillis()
             EvaluationResultLogger.write(Map("rows" -> _row, "cols" -> _col, "stringlen" -> _stringlen, "storageMode" -> storageMode, "operation" -> OperationType.Query, "time" -> (stop - start)))
           })

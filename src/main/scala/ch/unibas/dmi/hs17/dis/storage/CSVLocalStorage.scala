@@ -6,17 +6,19 @@ import org.apache.spark.sql.{SaveMode, _}
 import scala.util.{Failure, Success, Try}
 
 /**
+  * Doesn't work currently for some reason
+  *
   * Created by silvan on 10.04.17.
   */
-object CSVLocalStorage extends FileStorage{
+object CSVLocalStorage extends FileStorage {
 
   def read(filename: String)(implicit ac: AppContext): Try[DataFrame] = {
     try {
       if (!exists(filename).get) {
         throw new IllegalArgumentException("no file found at " + filename)
       }
-
-      Success(ac.sparkSession.read.csv(filename))
+      val df = ac.sparkSession.read.option("header", "true").option("inferSchema", "true").csv(filename)
+      Success(df)
     } catch {
       case e: Exception => Failure(e)
     }
@@ -29,7 +31,7 @@ object CSVLocalStorage extends FileStorage{
     */
   def write(filename: String, df: DataFrame, mode: SaveMode = SaveMode.Append): Try[Unit] = {
     try {
-      df.write.mode(mode).csv(filename)
+      df.write.mode(mode).option("header", "true").format("csv").save(filename)
       Success()
     } catch {
       case e: Exception => Failure(e)

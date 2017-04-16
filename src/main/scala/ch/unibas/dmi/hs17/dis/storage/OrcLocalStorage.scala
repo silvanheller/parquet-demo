@@ -15,8 +15,7 @@ object OrcLocalStorage extends FileStorage {
       if (!exists(filename).get) {
         throw new IllegalArgumentException("no file found at " + filename)
       }
-
-      Success(ac.sparkSession.read.orc(filename))
+      Success(ac.sparkSession.read.option("header", "true").orc(filename))
     } catch {
       case e: Exception => Failure(e)
     }
@@ -29,7 +28,7 @@ object OrcLocalStorage extends FileStorage {
     */
   def write(filename: String, df: DataFrame, mode: SaveMode = SaveMode.Append): Try[Unit] = {
     try {
-      df.write.mode(mode).orc(filename)
+      df.write.mode(mode).option("header", "true").orc(filename)
       Success()
     } catch {
       case e: Exception => Failure(e)

@@ -2,14 +2,17 @@ package ch.unibas.dmi.hs17.dis.storage
 
 import java.io.File
 
+import ch.unibas.dmi.hs17.dis.main.AppContext
+import ch.unibas.dmi.hs17.dis.utils.Logging
 import org.apache.commons.io.FileUtils
+import org.apache.spark.sql.{DataFrame, SaveMode}
 
 import scala.util.{Failure, Success, Try}
 
 /**
   * Created by silvan on 10.04.17.
   */
-class FileStorage extends Serializable{
+abstract class FileStorage extends Serializable with Logging {
 
   def exists(filename: String): Try[Boolean] = {
     try {
@@ -35,4 +38,9 @@ class FileStorage extends Serializable{
       case e: Exception => Failure(e)
     }
   }
+
+  def read(filename: String)(implicit ac: AppContext): Try[DataFrame]
+
+  def write(filename: String, df: DataFrame, mode: SaveMode = SaveMode.Append): Try[Unit]
+
 }
