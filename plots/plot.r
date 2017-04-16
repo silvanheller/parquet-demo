@@ -58,7 +58,7 @@ for (rows in unique(df$rows)) {
       for(operation in unique(df$operation)){
         save(
           storagePlot(rowCount = rows, colCount = cols, slen = stringlen, op = operation),
-          paste("optime_", rows, "_", cols, "_",stringlen, "_", operation, ".png", sep = '')
+          paste(operation,"Time_", rows, "_", cols, "_",stringlen, ".png", sep = '')
         )  
       }
     }
