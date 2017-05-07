@@ -5,7 +5,7 @@ import java.io.File
 import ch.unibas.dmi.hs17.dis.config.Config
 import ch.unibas.dmi.hs17.dis.ops.{QueryOp, WriteOp}
 import ch.unibas.dmi.hs17.dis.storage.StorageMode.StorageMode
-import ch.unibas.dmi.hs17.dis.utils.Logging
+import ch.unibas.dmi.hs17.dis.utils.{Logging, ParquetDemoUtils}
 import org.apache.commons.io.FileUtils
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.hive.HiveContext
@@ -14,10 +14,11 @@ import org.apache.spark.{SparkConf, SparkContext}
 /**
   * Created by silvan on 05.04.17.
   */
-object EvaluationRunner extends Config with Logging {
+object EvaluationRunner extends Config with Logging with ParquetDemoUtils {
 
   def cleanup() = {
     log.debug("Deleting old files")
+    verifyInput("cleanup")
     FileUtils.deleteDirectory(new File(LOCAL_DATAPATH))
     new File(LOCAL_DATAPATH).mkdirs()
   }
@@ -28,11 +29,11 @@ object EvaluationRunner extends Config with Logging {
     //implicit def ac: AppContext = mainContext
     implicit val ac = mainContext
 
-    val rows = Seq(100, 1000)
-    val cols = Seq(1, 10, 100)
-    val stringlens = Seq(5, 100)
+    val rows = Seq(10000, 100000)
+    val cols = Seq(1, 10, 50, 100)
+    val stringlens = Seq(5, 20, 50, 100)
 
-    cleanup()
+    //cleanup()
 
     val writeOp = new WriteOp(rows, cols, stringlens)
     writeOp.execute()
@@ -75,8 +76,8 @@ object EvaluationRunner extends Config with Logging {
   /**
     * Returns a filename for a given configuration
     */
-  def getFileName(rows: Int, cols: Int, stringlen: Int, storageMode: StorageMode): String ={
-    rows+"_"+cols+"_"+stringlen+"."+storageMode.toString
+  def getFileName(rows: Int, cols: Int, stringlen: Int, storageMode: StorageMode): String = {
+    rows + "_" + cols + "_" + stringlen + "." + storageMode.toString
   }
 
 

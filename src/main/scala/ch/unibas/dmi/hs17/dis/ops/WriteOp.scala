@@ -13,6 +13,7 @@ import ch.unibas.dmi.hs17.dis.utils.{EvaluationResultLogger, Logging}
 class WriteOp(rows: Seq[Int], cols: Seq[Int], stringlens: Seq[Int]) extends Logging {
 
   def execute()(implicit ac: AppContext): Unit = {
+    verifyInput("writeOp")
     //Iterate over all permutations
     StorageMode.values.foreach(storageMode => {
       log.debug("====================================")
