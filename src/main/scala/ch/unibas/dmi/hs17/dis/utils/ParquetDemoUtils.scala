@@ -9,7 +9,7 @@ trait ParquetDemoUtils extends Logging {
 
   def verifyInput(action: String): Unit = {
     val keyboard = new Scanner(System.in)
-    System.out.println("enter 42 to confirm {}", action)
+    System.out.println("enter 42 to confirm "+action)
     val myint = keyboard.nextInt
     if (myint != 42) {
       log.warn("Aborting {}", action)

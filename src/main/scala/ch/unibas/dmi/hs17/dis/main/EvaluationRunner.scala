@@ -3,7 +3,7 @@ package ch.unibas.dmi.hs17.dis.main
 import java.io.File
 
 import ch.unibas.dmi.hs17.dis.config.Config
-import ch.unibas.dmi.hs17.dis.ops.{QueryOp, WriteOp}
+import ch.unibas.dmi.hs17.dis.ops.{PersonQueryOp, PersonWriteOp, QueryOp, WriteOp}
 import ch.unibas.dmi.hs17.dis.storage.StorageMode.StorageMode
 import ch.unibas.dmi.hs17.dis.utils.{Logging, ParquetDemoUtils}
 import org.apache.commons.io.FileUtils
@@ -29,17 +29,23 @@ object EvaluationRunner extends Config with Logging with ParquetDemoUtils {
     //implicit def ac: AppContext = mainContext
     implicit val ac = mainContext
 
-    val rows = Seq(10000, 100000)
+    var rows = Seq(100000)
     val cols = Seq(1, 10, 50, 100)
     val stringlens = Seq(5, 20, 50, 100)
 
     //cleanup()
 
     val writeOp = new WriteOp(rows, cols, stringlens)
-    writeOp.execute()
+    //writeOp.execute()
 
     val queryOp = new QueryOp(rows, cols, stringlens)
     queryOp.execute()
+
+    //val personWriteOp = new PersonWriteOp(rows)
+    //personWriteOp.execute()
+    rows = Seq(10)
+    val personQueryOp = new PersonQueryOp(rows)
+    personQueryOp.execute()
   }
 
   /**
@@ -74,7 +80,7 @@ object EvaluationRunner extends Config with Logging with ParquetDemoUtils {
   }
 
   /**
-    * Returns a filename for a given configuration
+    * Returns a filename for a given configuration with cols + stringlength
     */
   def getFileName(rows: Int, cols: Int, stringlen: Int, storageMode: StorageMode): String = {
     rows + "_" + cols + "_" + stringlen + "." + storageMode.toString

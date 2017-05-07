@@ -20,7 +20,7 @@ class WriteOp(rows: Seq[Int], cols: Seq[Int], stringlens: Seq[Int]) extends Logg
       log.debug("Evaluating WRITING: Storage Mode {}\n", storageMode)
       log.debug("====================================")
       //Cache current storage method
-      Generator.genAndWriteDF(rows = 10, cols = 10, stringLength = 10, filepath = LOCAL_DATAPATH + "toy_data." + storageMode.toString, storageMode = storageMode)
+      Generator.genAndWriteStringDF(rows = 10, cols = 10, stringLength = 10, filepath = LOCAL_DATAPATH + "toy_data." + storageMode.toString, storageMode = storageMode)
 
 
       rows.foreach(_row => {
@@ -30,7 +30,7 @@ class WriteOp(rows: Seq[Int], cols: Seq[Int], stringlens: Seq[Int]) extends Logg
           stringlens.foreach(_stringlen => {
             //log.debug("Evaluating for string-leng {}", _stringlen)
             val start = System.currentTimeMillis()
-            Generator.genAndWriteDF(_row, _col, _stringlen, LOCAL_DATAPATH + getFileName(_row, _col, _stringlen, storageMode), storageMode)
+            Generator.genAndWriteStringDF(_row, _col, _stringlen, LOCAL_DATAPATH + getFileName(_row, _col, _stringlen, storageMode), storageMode)
             val stop = System.currentTimeMillis()
             EvaluationResultLogger.write(Map("rows" -> _row, "cols" -> _col, "stringlen" -> _stringlen, "storageMode" -> storageMode, "operation" -> OperationType.Write, "time" -> (stop - start)))
           })
