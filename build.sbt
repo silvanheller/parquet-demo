@@ -1,13 +1,11 @@
-import sbt.project
-import sbt._
-import sbt.ExclusionRule
 import sbt.Keys._
+import sbt.{ExclusionRule, project, _}
 import sbtassembly.AssemblyPlugin.autoImport._
 
 name := "parquet-demo"
 
 lazy val commonSettings = Seq(
-  organization :="ch.unibas.dmi.hs17.dis",
+  organization := "ch.unibas.dmi.hs17.dis",
   scalaVersion := "2.11.8"
 )
 
@@ -19,7 +17,7 @@ lazy val buildSettings = Seq(
 )
 
 //projects
-  lazy val root = (project in file(".")).
+lazy val root = (project in file(".")).
   settings(commonSettings: _*)
 
 //assembly
@@ -100,7 +98,7 @@ assemblyMergeStrategy in assembly := {
   case x => MergeStrategy.last
 }
 
-//mainClass in assembly := Some("ch.unibas.dmi.dbis.adam.main.Startup")
+mainClass in assembly := Some("ch.unibas.dmi.hs17.dis.main.EvaluationRunner")
 
 //test in assembly := {}
 
