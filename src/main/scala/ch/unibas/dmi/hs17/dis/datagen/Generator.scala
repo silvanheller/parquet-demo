@@ -31,27 +31,24 @@ object Generator extends Logging with Config with Serializable {
 
   //Automatically implements the product interface
 
-  def genAndWritePersonDF(rows: Int, filepath: String, storageMode: storage.StorageMode.Value)(implicit ac: AppContext): Try[Unit] = {
+  def genAndWritePersonDF(rows: Int, stringlen: Int, filepath: String, storageMode: storage.StorageMode.Value)(implicit ac: AppContext): Try[Unit] = {
     try {
       val adam = Adam("adam", 2000)
       //data
       val limit = math.min(rows, MAX_TUPLES_PER_BATCH)
 
-      val spark = ac.sparkSession
-      import spark.implicits._
-
       (0 until rows).sliding(limit, limit).foreach { seq =>
         val data: IndexedSeq[PersonCC] = seq.map(idx => {
-          val grandmummum = Grandmum(adam, generateRandomString(10), (Random.nextDouble() * 30 + 70).toInt)
-          val grandmumdad = Grandmum(adam, generateRandomString(10), (Random.nextDouble() * 30 + 70).toInt)
-          val grandadmum = Granddad(adam, generateRandomString(10), (Random.nextDouble() * 30 + 70).toInt)
-          val grandaddad = Granddad(adam, generateRandomString(10), (Random.nextDouble() * 30 + 70).toInt)
-          val dad = Father(grandaddad, grandmumdad, generateRandomString(10), (Random.nextDouble() * 30 + 20).toInt)
-          val mum = Mother(grandaddad, grandmummum, generateRandomString(10), (Random.nextDouble() * 30 + 20).toInt)
-          PersonCC(dad, mum, generateRandomString(10), (Random.nextDouble() * 5).toInt)
+          val grandmummum = Grandmum(adam, generateRandomString(stringlen), (Random.nextDouble() * 30 + 70).toInt)
+          val grandmumdad = Grandmum(adam, generateRandomString(stringlen), (Random.nextDouble() * 30 + 70).toInt)
+          val grandadmum = Granddad(adam, generateRandomString(stringlen), (Random.nextDouble() * 30 + 70).toInt)
+          val grandaddad = Granddad(adam, generateRandomString(stringlen), (Random.nextDouble() * 30 + 70).toInt)
+          val dad = Father(grandaddad, grandmumdad, generateRandomString(stringlen), (Random.nextDouble() * 30 + 20).toInt)
+          val mum = Mother(grandaddad, grandmummum, generateRandomString(stringlen), (Random.nextDouble() * 30 + 20).toInt)
+          PersonCC(dad, mum, generateRandomString(stringlen), (Random.nextDouble() * 5).toInt)
         })
         log.debug("Finished generating person")
-        val rdd: RDD[PersonCC] = ac.sc.parallelize(data)
+        val rdd: RDD[PersonCC] = ac.sparkSession.sparkContext.parallelize(data)
         log.debug("Finished generating rdd")
 
         val df = ac.sparkSession.createDataFrame(rdd)
@@ -87,7 +84,7 @@ object Generator extends Logging with Config with Serializable {
           val data = Seq.fill(cols)(generateRandomString(stringLength))
           Row(Seq(idx) ++ data: _*)
         })
-        val rdd: RDD[Row] = ac.sc.parallelize(data)
+        val rdd: RDD[Row] = ac.sparkSession.sparkContext.parallelize(data)
 
         //In the end, everything is a string
         val schema = StructType(Seq(StructField("id", IntegerType)) ++ Seq.tabulate(cols)(el => StructField(el.toString + "c", StringType)))

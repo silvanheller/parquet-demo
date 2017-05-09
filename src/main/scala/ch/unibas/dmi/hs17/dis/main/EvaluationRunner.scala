@@ -7,9 +7,8 @@ import ch.unibas.dmi.hs17.dis.ops.{PersonQueryOp, PersonWriteOp, QueryOp, WriteO
 import ch.unibas.dmi.hs17.dis.storage.StorageMode.StorageMode
 import ch.unibas.dmi.hs17.dis.utils.{Logging, ParquetDemoUtils}
 import org.apache.commons.io.FileUtils
+import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.hive.HiveContext
-import org.apache.spark.{SparkConf, SparkContext}
 
 /**
   * Created by silvan on 05.04.17.
@@ -29,9 +28,9 @@ object EvaluationRunner extends Config with Logging with ParquetDemoUtils {
     //implicit def ac: AppContext = mainContext
     implicit val ac = mainContext
 
-    var rows = Seq(100000)
+    var rows = Seq(1000000)
     val cols = Seq(1, 10, 50, 100)
-    val stringlens = Seq(5, 20, 50, 100)
+    val stringlens = Seq(5, 50, 100)
 
     //cleanup()
 
@@ -39,12 +38,11 @@ object EvaluationRunner extends Config with Logging with ParquetDemoUtils {
     //writeOp.execute()
 
     val queryOp = new QueryOp(rows, cols, stringlens)
-    queryOp.execute()
+    //queryOp.execute()
 
-    //val personWriteOp = new PersonWriteOp(rows)
-    //personWriteOp.execute()
-    rows = Seq(10)
-    val personQueryOp = new PersonQueryOp(rows)
+    val personWriteOp = new PersonWriteOp(rows, stringlens)
+    personWriteOp.execute()
+    val personQueryOp = new PersonQueryOp(rows, stringlens)
     personQueryOp.execute()
   }
 
@@ -72,8 +70,6 @@ object EvaluationRunner extends Config with Logging with ParquetDemoUtils {
         .enableHiveSupport()
         .getOrCreate()
 
-      @transient implicit lazy val sc = new SparkContext(sparkConfig)
-      @transient implicit lazy val sqlContext = new HiveContext(sc)
     }
 
     Implicits.ac

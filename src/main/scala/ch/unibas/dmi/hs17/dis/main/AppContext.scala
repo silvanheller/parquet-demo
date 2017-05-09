@@ -1,7 +1,6 @@
 package ch.unibas.dmi.hs17.dis.main
 
-import org.apache.spark.SparkContext
-import org.apache.spark.sql.{SQLContext, SparkSession}
+import org.apache.spark.sql.SparkSession
 
 import scala.annotation.implicitNotFound
 
@@ -12,7 +11,4 @@ import scala.annotation.implicitNotFound
 trait AppContext {
   def sparkSession: SparkSession
 
-  def sc: SparkContext
-
-  def sqlContext: SQLContext
 }

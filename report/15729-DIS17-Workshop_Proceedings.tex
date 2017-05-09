@@ -1,0 +1,170 @@
+% =======================================================================================
+% =======================================================================================
+% === IMPORTANT NOTE FOR STUDENTS:                                                    ===
+% =======================================================================================
+% === Do NOT change anything in this file. Only change files in the "reportContent"   ===
+% === subfolder.                                                                      ===
+% =======================================================================================
+% =======================================================================================
+
+\documentclass[runningheads]{llncs}
+\usepackage{makeidx}
+\usepackage{chapterbib}
+%\usepackage[english,german]{babel}
+%\selectlanguage{german}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}\graphicspath{{images/}{reportContent/images/}{AsterixDB/images/}{CarbonData/images/}{DistributedLog/images/}{Flume/images/}{Geode/images/}{Helix/images/}{Ignite/images/}{Kudu/images/}{Kylin/images/}{Mnemonic/images/}{Omid/images/}{Parquet/images7}{Phoenix/images/}{Quickstep/images/}{S2Graph/images/}{Spark/images/}{Sqoop/images/}{Tajo/images/}{Tephra/images/}{Trafodion/images/}}
+
+\usepackage{import}
+\usepackage{lipsum}
+\usepackage{setspace}
+
+% =======================================================================================
+% === The following latex-packages should cover all your needs.                       ===
+% === If this is not the case, please write an email to one of the assistants in      ===
+% === which you inform us which additional package you need and why.                  ===
+% === (Otherwise we will not be able to generate proceedings for the course...)       ===
+% =======================================================================================
+
+
+% For URLs
+\usepackage{url}
+
+% For Subfigures
+\usepackage{subfig}
+
+% For Algorithms
+\usepackage{algorithmic}
+\usepackage{algorithm}
+
+% For Code Snippets
+\usepackage{listings}
+
+% For Todo Notes 
+\usepackage[colorinlistoftodos]{todonotes}
+
+% For Colors (\textcolor etc.)
+\usepackage{color}
+
+% For Tables
+\usepackage{multirow}
+
+% For Tikz
+\usepackage{tikz}
+
+% For References
+\usepackage{cleveref}
+
+% Required for turning proceedings on and off
+% (Source: http://tex.stackexchange.com/questions/87656/turning-parts-of-text-on-and-off)
+\usepackage{etoolbox}
+\usepackage{verbatim}
+\newbool{produceProceedings}
+\setbool{produceProceedings}{false} % Note for the assistants: Change to true in order to generate the proceedings.
+\newenvironment{produceProceedings}{}{}
+\ifbool{produceProceedings}{}{\AtBeginEnvironment{produceProceedings}{\comment}%
+	\AtEndEnvironment{produceProceedings}{\endcomment}}
+
+\newcommand{\coursename}{Distributed Information Systems}
+\newcommand{\courseacronym}{DIS}
+\newcommand{\semester}{spring semester 2017}
+\newcommand{\semesterCapitals}{Spring Semester 2017}
+\newcommand{\rootDocument}{15729-DIS17-Workshop\_Proceedings.tex}
+
+\begin{document}
+	
+\begin{produceProceedings}
+	\begin{titlepage}
+		\includegraphics{UniBas_Logo_EN_Schwarz_RGB_65}
+		
+		\vspace{80pt}
+		
+		\centering
+		
+		\begin{spacing}{2.8}
+		{\Huge \fontfamily{phv} \bfseries Proceedings of the \coursename\ (\courseacronym) Course}
+		\end{spacing}
+		
+		\vspace{25pt}
+		
+		{\large Workshop Reports}
+		
+		\vspace{50pt}
+		
+		{\large \semesterCapitals}
+		
+		\vspace{50pt}
+		
+		{\large Natural Science Faculty of the University of Basel}
+		
+		\vspace{2pt}
+		
+		{\large	Department of Mathematics and Computer Science}
+	\end{titlepage}	
+	
+%	\frontmatter 
+	\pagestyle{headings}
+	\addtocmark{Reports}
+	%
+	\chapter*{Preface}
+	%
+	This documents contains all student workshop reports of the \coursename\ (\courseacronym) course held at the University of Basel in the \semester.
+	%
+	\chapter*{Organization}
+	The \coursename\ (\courseacronym) course of the \semester\ is organized by the Databases and Information Systems (DBIS) research group, Department of Mathematics and Computer Science, Univeristy
+	of Basel.
+	%
+	\section*{Lecturer}
+	Prof.\,Dr. Heiko Schuldt (heiko.schuldt@unibas.ch)
+	%
+	\section*{Assistants}
+	M.\,Sc. Alexander Stiemer (alexander.stiemer@unibas.ch) % \\
+%	M.\,Sc. Marco Vogt (marco.vogt@unibas.ch)
+	%
+%	\section*{Tutors}
+%	M.\,Sc. \DJ or\dj e Reli\'{c} (dorde.relic@stud.unibas.ch) \\
+%	M.\,Sc. Marco Vogt (marco.vogt@unibas.ch)
+	%
+	\tableofcontents
+\end{produceProceedings}
+	
+%
+\mainmatter
+%
+
+% Note for the assistants: Add all student reports to this list in order to generate the proceedings.
+\begin{cbunit}\import{reportContent/}{reportContent.tex}\end{cbunit}
+
+%\begin{cbunit}\import{AsterixDB/}{reportContent.tex}\end{cbunit}
+%\begin{cbunit}\import{CarbonData/}{reportContent.tex}\end{cbunit}
+%\begin{cbunit}\import{DistributedLog/}{reportContent.tex}\end{cbunit}
+%\begin{cbunit}\import{Flume/}{reportContent.tex}\end{cbunit}
+%\begin{cbunit}\import{Geode/}{reportContent.tex}\end{cbunit}
+%\begin{cbunit}\import{Helix/}{reportContent.tex}\end{cbunit}
+%\begin{cbunit}\import{Ignite/}{reportContent.tex}\end{cbunit}
+%\begin{cbunit}\import{Kudu/}{reportContent.tex}\end{cbunit}
+%\begin{cbunit}\import{Kylin/}{reportContent.tex}\end{cbunit}
+%\begin{cbunit}\import{Mnemonic/}{reportContent.tex}\end{cbunit}
+%\begin{cbunit}\import{Omid/}{reportContent.tex}\end{cbunit}
+%\begin{cbunit}\import{Parquet/}{reportContent.tex}\end{cbunit}
+%\begin{cbunit}\import{Phoenix/}{reportContent.tex}\end{cbunit}
+%\begin{cbunit}\import{Quickstep/}{reportContent.tex}\end{cbunit}
+%\begin{cbunit}\import{S2Graph/}{reportContent.tex}\end{cbunit}
+%\begin{cbunit}\import{Spark/}{reportContent.tex}\end{cbunit}
+%\begin{cbunit}\import{Sqoop/}{reportContent.tex}\end{cbunit}
+%\begin{cbunit}\import{Tajo/}{reportContent.tex}\end{cbunit}
+%\begin{cbunit}\import{Tephra/}{reportContent.tex}\end{cbunit}
+%\begin{cbunit}\import{Trafodion/}{reportContent.tex}\end{cbunit}
+
+\end{document}
+
+% =======================================================================================
+% =======================================================================================
+% === IMPORTANT NOTE FOR STUDENTS:                                                    ===
+% =======================================================================================
+% === Do NOT change anything in this file. Only change files in the "reportContent"   ===
+% === subfolder.                                                                      ===
+% =======================================================================================
+% =======================================================================================

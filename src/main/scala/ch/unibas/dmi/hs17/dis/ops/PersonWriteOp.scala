@@ -9,7 +9,7 @@ import ch.unibas.dmi.hs17.dis.utils.{EvaluationResultLogger, Logging, ParquetDem
 /**
   * Created by silvan on 07.05.17.
   */
-class PersonWriteOp(rows: Seq[Int]) extends Config with Logging with ParquetDemoUtils {
+class PersonWriteOp(rows: Seq[Int], stringlens: Seq[Int]) extends Config with Logging with ParquetDemoUtils {
 
   def execute()(implicit ac: AppContext): Unit = {
     verifyInput("person-writing")
@@ -22,17 +22,21 @@ class PersonWriteOp(rows: Seq[Int]) extends Config with Logging with ParquetDemo
 
 
       rows.foreach(_row => {
-        val start = System.currentTimeMillis()
-        val write = Generator.genAndWritePersonDF(_row, LOCAL_DATAPATH + PersonWriteOp.getFileName(_row, storageMode), storageMode)
-        val stop = System.currentTimeMillis()
-        val time = {
-          if (write.isSuccess) {
-            stop - start
-          } else
-            0
-        }
-        log.debug("time: " + time + " sm: " + storageMode)
-        EvaluationResultLogger.write(Map("rows" -> _row, "cols" -> -1, "stringlen" -> -1, "storageMode" -> storageMode, "operation" -> OperationType.WriteNested, "time" -> time))
+        stringlens.foreach(_stringlen => {
+          if (storageMode.id != StorageMode.csv.id) {
+            val start = System.currentTimeMillis()
+            val write = Generator.genAndWritePersonDF(_row, _stringlen, LOCAL_DATAPATH + PersonWriteOp.getFileName(_row, _stringlen, storageMode), storageMode)
+            val stop = System.currentTimeMillis()
+            val time = {
+              if (write.isSuccess) {
+                stop - start
+              } else
+                0
+            }
+            log.debug("time: " + time + " sm: " + storageMode)
+            EvaluationResultLogger.write(Map("rows" -> _row, "cols" -> -1, "stringlen" -> _stringlen, "storageMode" -> storageMode, "operation" -> OperationType.WriteNested, "time" -> time))
+          }
+        })
       })
     })
   }
@@ -40,7 +44,7 @@ class PersonWriteOp(rows: Seq[Int]) extends Config with Logging with ParquetDemo
 }
 
 object PersonWriteOp {
-  def getFileName(_row: Int, storageMode: StorageMode.Value): Any = {
-    _row + "_person." + storageMode.toString
+  def getFileName(_row: Int, stringlen: Int, storageMode: StorageMode.Value): Any = {
+    _row + "_person_" + stringlen + "." + storageMode.toString
   }
 }
