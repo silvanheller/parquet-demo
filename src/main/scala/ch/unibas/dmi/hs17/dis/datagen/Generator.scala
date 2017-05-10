@@ -47,8 +47,16 @@ object Generator extends Logging with Config with Serializable {
           val mum = Mother(grandaddad, grandmummum, generateRandomString(stringlen), (Random.nextDouble() * 30 + 20).toInt)
           PersonCC(dad, mum, generateRandomString(stringlen), (Random.nextDouble() * 5).toInt)
         })
+        val grandmummum = Grandmum(adam, generateRandomString(stringlen), (Random.nextDouble() * 30 + 70).toInt)
+        val grandmumdad = Grandmum(adam, generateRandomString(stringlen), (Random.nextDouble() * 30 + 70).toInt)
+        val grandadmum = Granddad(adam, generateRandomString(stringlen), (Random.nextDouble() * 30 + 70).toInt)
+        val grandaddad = Granddad(adam, generateRandomString(stringlen), 200)
+        val dad = Father(grandaddad, grandmumdad, generateRandomString(stringlen), (Random.nextDouble() * 30 + 20).toInt)
+        val mum = Mother(grandaddad, grandmummum, generateRandomString(stringlen), (Random.nextDouble() * 30 + 20).toInt)
+        val dataPlus = data++Seq(PersonCC(dad, mum, generateRandomString(stringlen), (Random.nextDouble() * 5).toInt))
+
         log.debug("Finished generating person")
-        val rdd: RDD[PersonCC] = ac.sparkSession.sparkContext.parallelize(data)
+        val rdd: RDD[PersonCC] = ac.sparkSession.sparkContext.parallelize(dataPlus)
         log.debug("Finished generating rdd")
 
         val df = ac.sparkSession.createDataFrame(rdd)

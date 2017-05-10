@@ -5,7 +5,7 @@ package ch.unibas.dmi.hs17.dis.ops
   */
 object OperationType extends Enumeration {
   type OperationType = Value
-  val Write, Read, Query, WriteNested, PeopleQuery = Value
+  val Write, Read, Query, WriteNested, PeopleGroupingQuery, PeopleMaxQuery = Value
 
 
 }
