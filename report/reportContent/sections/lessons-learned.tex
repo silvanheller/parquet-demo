@@ -1,2 +1,45 @@
-\section{Lessons Learned}
-Describe your lessons learned.
+\section{Lessons Learned} \label{sec:lessons_learned}
+
+\subsection{Tools and Frameworks}
+In the beginning, I had trouble figuring out how to use Parquet.
+The official Website does not provide any information whatsoever on how to actually use Parquet.
+Thankfully, I had worked with Spark in the Context of my Bachelor's Thesis on $ADAM_{pro}$\footnote{https://github.com/vitrivr/ADAMpro} which uses parquet to store data.
+
+Using Scala was an easy choice given that it is the language of choice for Spark.
+Utilizing Parquet together with spark is extremely simple.
+The basic abstraction of Spark for Data, \textit{Dataframes}, contain write-methods for each storage method used in the benchmark and it requires no setup at all to use parquet together with Spark.
+To illustrate, consider the difference between writing data in JSON and writing data in Parquet in Scala-Code.
+
+\renewcommand{\lstlistingname}{Code}
+
+\begin{lstlisting}[language=Scala,caption=Saving a Dataframe with Parquet, label=amb, captionpos=b]
+def write(filename: String, df: DataFrame) = {
+  df.write.mode(SaveMode.Overwrite).parquet(filename)
+}
+\end{lstlisting}
+
+When writing a Dataframe to JSON, you simply change the storage-format from parquet to JSON.
+
+\begin{lstlisting}[language=Scala,caption=Saving a Dataframe with JSON, label=amb, captionpos=b]
+def write(filename: String, df: DataFrame) = {
+  df.write.mode(SaveMode.Overwrite).json(filename)
+}
+\end{lstlisting}
+
+For reading, the code is similar:
+
+\begin{lstlisting}[language=Scala,caption=Reading a Dataframe with Parquet, label=amb, captionpos=b]
+def read(filename: String): DataFrame = {
+  sparkSession.read.parquet(filename)
+}
+\end{lstlisting}
+
+And Spark takes care of the rest.
+
+\subsection{Results}
+The main takeaway for me was that there is no reason at all to use JSON or CSV to store large amounts of data when using spark.
+Parquet not only saves massive amount of storage space, but also enables faster querying.
+I was surprised that ORC held up so well.
+If I were to use spark on a massive scale, both ORC and Parquet would warrant taking a closer look.
+The performed benchmarks were only a start.
+For both ORC and Parquet there exist different compression schemes and different configuration options which have to be tuned for a particular use-case.

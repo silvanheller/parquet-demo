@@ -1,6 +1,22 @@
-\section{Introduction}
+\section{Introduction} \label{sec:introduction}
 
+As datasets grow, so does the need for storing them efficiently and in a format that is suited to the needs of high-volume, high-velocity and high-variety data.
+In this Workshop report, we will discuss Parquet\footnote{https://parquet.apache.org/} as an example of a file format suited for 'Big Data'.
 
-\lipsum[1-2] % TODO: DELETE ME (\lipsum[1-2])
+\subsection{History}
+Google outlined in 2010 how they were using Dremel \cite{dremel:melnik} and the Dremel file format to store high-variety structured data at petabyte scale in a columnar format.
+Since Dremel is, as most Google tools are, proprietary and not open source,
+Twitter and Cloudera started the Apache Parquet project as an open source implementation \cite{parquet-announcement:kestelyn}.
+The goal was to provide an efficient columnar storage format for the Hadoop ecosystem.
+Today, Parquet is used in production at multiple companies, the most notable ones being Stripe and Twitter \cite{adopters:parquet}.
 
+\subsection{Using Parquet}
+Since Parquet is a file format, it requires implementation and tools around it.
+We have used Apache Spark \cite{spark:zaharia}, which has built-in support for Parquet and other file formats and is thus ideal to compare Parquet fairly.
+The application implemented is a benchmark to compare Parquet, JSON, CSV and Apache ORC\footnote{https://orc.apache.org/}.
+Our benchmark will contain two scenarios, one with a table which has a lot of columns but the queries used only access one column and the other one with nested objects.
 
+\subsection{Outline}
+Chapter \ref{sec:parquet} will describe the Parquet format in detail.
+To see how Parquet compares to other data storage formats, Chapter \ref{sec:application} outlines two scenarios which will be used to benchmark Parquet.
+Chapter \ref{sec:results} contains the benchmark results and Chapter \ref{sec:lessons_learned} concludes with the lessons learned.

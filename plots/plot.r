@@ -10,7 +10,7 @@ getwd()
 ###############################################
 ## Enter your Filename here
 ###############################################
-fn <- "0416_1844"
+fn <- "0510_1754"
 ###############################################
 path <- paste("plots/", fn, sep = '')
 dir.create(path, recursive = TRUE,  mode = "0777", showWarnings = FALSE)
@@ -94,21 +94,31 @@ for (rows in unique(df$rows)) {
   for (cols in unique(df$cols)) {
     for (stringlen in unique(df$stringlen)) {
       for(operation in unique(df$operation)){
-        ##Simple comparison of storage modes
-        ##save(
-          ##storagePlot(rowCount = rows, colCount = cols, slen = stringlen, op = operation),
-          ##paste(operation,"Time_", rows, "r_", cols, "c_",stringlen, "sl.png", sep = '')
-        ##)
-        
-        ##Exploded for col count
-        save(
-          timeCol(rowCount = rows, slen = stringlen, op = operation),
-          paste(operation,"Colplot_", rows, "r_",stringlen, "sl.png", sep = '')
-        )
-        save(
-          timeRow(colCount = cols, slen = stringlen, op = operation),
-          paste(operation,"Rowplot_", rows, "r_",stringlen, "sl.png", sep = '')
-        )
+        print(nrow(subset(df, rows == rows & cols == cols & stringlen == stringlen & operation == operation)))
+        if(nrow(subset(df, rows == rows & cols == cols & stringlen == stringlen & operation == operation))>0){
+          print(cols)
+          print(rows)
+          print(operation)
+          if(cols==-1){
+            print("saving time plot")
+            ##Simple comparison of storage modes
+            ##save(
+              ##storagePlot(rowCount = rows, colCount = cols, slen = stringlen, op = operation),
+              ##paste(operation,"Time_", rows, "r_", cols, "c_",stringlen, "sl.png", sep = '')
+            ##)
+          }else{
+            print("saving colplot")
+            save(
+              timeCol(rowCount = rows, slen = stringlen, op = operation),
+              paste(operation,"Colplot_", rows, "r_",stringlen, "sl.png", sep = '')
+            )
+          }
+          print("saving rowplot")
+          save(
+            timeRow(colCount = cols, slen = stringlen, op = operation),
+            paste(operation,"Rowplot_", cols, "c_",stringlen, "sl.png", sep = '')
+          )
+        }
       }
     }
   }
