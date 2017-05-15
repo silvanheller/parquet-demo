@@ -5,7 +5,7 @@ As such, it is best thought of as an alternative to JSON or CSV.
 While they are not its main competitors, most readers will be familiar with them so we will use them as easy comparisons.
 As a file storage format, Parquet is designed to be language-agnostic.
 
-This section will focus on the two core components of Parquet, columnar storage and how Parquet stores nested objects.
+This section will focus on the two core components of Parquet, columnar storage and nested object storage.
 
 \subsection{Row storage versus columnar storage}
 
@@ -43,14 +43,14 @@ This has three major advantadges \cite{dremel-parquet:Twitter}:
 \begin{description}
 \item[Compression] Data in a column is more homogenous which allows for better compression. Our Benchmark results in Section \ref{sec:results} confirm this.
 \item[I/O] For column-based queries such as $max$ or $avg$, only the relevant subset of data needs to be scanned.
-\item[Processor Encoding] Data in the same Column has the same type which means optimized storage engines can use encodings better suited for modern processors
+\item[Processor Encoding] Data in the same Column has the same type which means optimized storage engines can use encodings better suited for modern processors.
 \end{description}
 
 \subsection{Nested Objects}
 \label{section:parquet-nested}
-To store nested objects, Parquet needs a schema.
-The schema used for Parquet is very similar to the one used by Protobuf\footnote{https://developers.google.com/protocol-buffers/}.
-A field thus is one of three possibilities
+To store nested objects, Parquet needs a description of them.
+The schema definition language used to describe objects in Parquet is very similar to the one used by Protobuf\footnote{https://developers.google.com/protocol-buffers/}.
+A field is one of three possibilities
 
 \begin{description}
 \item[required] The field exists once and only once
@@ -58,11 +58,16 @@ A field thus is one of three possibilities
 \item[repeated] The field exists zero ore more times
 \end{description}
 
-Or formally, the schema is defined as:
+Formally, the schema is defined as shown in Equation \ref{eq:parquet-schema}
 \begin{equation}
+\label{eq:parquet-schema}
 \tau = \mathbf{dom} \,|\, \langle A_{1} : \tau [*|?], \, \dots \,, \,  A_{n} : \tau [*|?]\rangle
 \end{equation}
 Where $\tau$ is an atomic type or record type \cite{dremel:melnik}. Atomic types are strings or integers, for example.
-$*$ indicates that a field is repeated and $?$ indicates that it is optional.
+The symbol $*$ indicates that a field is repeated and the symbol $?$ indicates that it is optional.
+This representation allows individual tables created for properties to be filled with indices for repeated values or a simple $null$ for optional values.
 
-To give a concrete example, TODOOOOOOOOOOoOooooOOOOoooooOOOOOO  //TODO
+To give a concrete example, an object $Person$ with properties $age$ and $name$ would be stored as two tables: $person.age$ and $person.name$.
+In the interest of brevity, we will not discuss in detail how parquet and deals with edge-cases.
+We recommend the Dremel Paper\cite{dremel:melnik} for an in-depth discussion.
+\newpage

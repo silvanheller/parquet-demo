@@ -3,7 +3,7 @@ In this section, we will cover the implemented benchmark application in detail.
 The code is available on Github\footnote{https://github.com/silvanheller/parquet-demo}
 
 \subsection{Technologies used}
-Our benchmarking application uses Apache Spark\footnote{http://spark.apache.org/} as Queryengine.
+Our benchmarking application uses Apache Spark\footnote{http://spark.apache.org/} as a query engine.
 The programming language used is Scala\footnote{https://www.scala-lang.org/}.
 We compare Parquet to JSON, CSV and Apache ORC\footnote{https://orc.apache.org/}
 
@@ -14,7 +14,7 @@ It features a table schema with a lot of columns, only one of which is accessed 
 The other columns are filled with strings, given that today's data sets often feature highly varied and unstructured data.
 
 \subsubsection{Table Layout}
-Given a number of rows $n_rows$, a number of columns $n_cols$ and the length of a string $s_length$, the table schema is depicted in Table \ref{table:schema-one}
+Given a number of rows $n\_rows$, a number of columns $n\_cols$ and the length of a string $s\_length$, the table schema is depicted in Table \ref{table:schema-one}.
 \begin{table}[h]
 \centering
 \caption{Table Layout for Scenario 1}
@@ -30,19 +30,28 @@ n\_rows & rand\_string(s\_len) & rand\_string(s\_len) & ... & rand\_string(s\_le
 \end{tabular}}
 \end{table}
 
+$rand\_string(n)$ indicates that a random alphanumeric string of length $n$ is generated.
+
 \subsubsection{Query}
 \label{sec:query-one}
 The query we have chosen for this scenario is a simple average over the 'id' column.
 Code-snippet \ref{code:scenario1-avg-spark} shows how this is done in Scala and snippet \ref{code:scenario1-avg-sql} shows the equivalent SQL query.
-\begin{lstlisting}[language=Scala,caption=Average over the ID Column in Spark, label=code:scenario1-avg-spark, captionpos=b]
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=Scala,caption=Average over the ID Column in Spark, label=code:scenario1-avg-spark]
 def getAVG(df: DataFrame): DataFrame = {
   df.agg(avg("id"))
 }
 \end{lstlisting}
-\begin{lstlisting}[language=SQL,caption=Equivalent SQL Query, label=code:scenario1-avg-sql, captionpos=b]
+\end{minipage}
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=SQL,caption=Equivalent SQL Query, label=code:scenario1-avg-sql]
   SELECT AVG(id) FROM table;
 \end{lstlisting}
-This requires acessing all rows and prevents automatically created index structures such as in ORC from interfering with our measurements.
+\end{minipage}
+
+This requires accessing all elements in a column and prevents automatically created lightweight index structures (such as in ORC) from interfering with our measurements.
 Apache Spark uses lazy evaluation for queries, which enables us to read the data from cold storage.
 This also means queries are run only once on the dataset since afterwards the data might be cached somewhere.
 
@@ -53,7 +62,7 @@ As discussed in Section \ref{section:parquet-nested}, parquet stores nested obje
 \subsubsection{Table Layout}
 
 Our Table is a collection of $Persons$. Each Person has a name and an age, two Parents, which in turn have Parents (Four Grandparents).
-Each Grandparent is a successor of Adam (inspired by Christian Mythology). Graphically, our Schema is represented in Figure \ref{fig:schema-scenario2}
+Each Grandparent is a successor of Adam (inspired by christian mythology). Graphically, our Schema is represented in Figure \ref{fig:schema-scenario2}
 
 \begin{figure}[h]
 \centering
@@ -72,17 +81,24 @@ In the interest of readability, we will not list them all.
 %$person.parent1.grandparent1_1.adam.name$, $person.parent1.grandparent1_1.adam.age$, $person.parent1.grandparent1_2.adam.name$, $person.parent1.grandparent1_2.adam.age$, \\
 %$person.parent2.grandparent2_1.adam.name$, $person.parent2.grandparent2_1.adam.age$, $person.parent2.grandparent2_2.adam.name$, $person.parent2.grandparent2_2.adam.age$, \\
 \subsubsection{Queries}
+\label{sec:query-two}
+Again, we average over a column respectively an attribute. This time, we have chosen the $person.parent1.grandparent1\_1.adam.age$ attribute.
 
-Again, we average over a column. This time, we have chosen the $person.parent1.grandparent1\_1.adam$ column.
+Code-snippet \ref{code:scenario2-avg-spark} shows how this is done in Scala and snippet \ref{code:scenario2-avg-sql} shows the equivalent SQL query.
 
-Code-snippet \ref{code:scenario1-avg-spark} shows how this is done in Scala and snippet \ref{code:scenario1-avg-sql} shows the equivalent SQL query.
-\begin{lstlisting}[language=Scala,caption=Average over the ID Column in Spark, label=code:scenario1-avg-spark, captionpos=b]
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=Scala,caption=Average over the ID Column in Spark, label=code:scenario2-avg-spark]
 def getAVG(df: DataFrame): DataFrame = {
   df.agg(avg("parent1.grandparent1_1.adam.age").as("adamage"))
 }
 \end{lstlisting}
-\begin{lstlisting}[language=SQL,caption=Equivalent SQL Query, label=code:scenario1-avg-sql, captionpos=b]
+\end{minipage}
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=SQL,caption=Equivalent SQL Query, label=code:scenario2-avg-sql]
   SELECT AVG(parent1.grandparent1_1.adam.age) FROM table;
 \end{lstlisting}
+\end{minipage}
 
 The same considerations as with Scenario I apply when choosing the query.
+\newpage
